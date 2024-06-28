@@ -256,3 +256,32 @@
 		}
 
 })(jQuery);
+
+
+// Categories
+// Starts
+function filterPosts(category) {
+	const posts = document.querySelectorAll('.post');
+	const filteredPosts = Array.from(posts).filter(post => category === 'all' || post.dataset.category === category);
+
+	posts.forEach(post => post.style.display = 'none');
+	filteredPosts.forEach((post, index) => {
+		post.style.display = (index < postsPerPage) ? 'block' : 'none';
+	});
+
+	const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
+	document.getElementById('pagination').innerHTML = '';
+
+	for (let i = 1; i <= totalPages; i++) {
+		const li = document.createElement('li');
+		li.innerHTML = `<a href="#" onclick="showFilteredPage(${i}, '${category}')">${i}</a>`;
+		document.getElementById('pagination').appendChild(li);
+	}
+
+	currentPage = 1;
+
+	// Add active class to the current category link
+	const categoryLinks = document.querySelectorAll('.categories ul li a');
+	categoryLinks.forEach(link => link.classList.remove('active'));
+	document.querySelector(`.categories ul li a[onclick="filterPosts('${category}')"]`).classList.add('active');
+}
